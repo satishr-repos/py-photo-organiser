@@ -161,16 +161,40 @@ def GetMetaDataFrame(path, statuscb):
     
     return pd.DataFrame(data)
 
+def copy_files(df, dest):
+    futures = {}
+    for idx, row in df.iterrows():
+        dirname = os.path.dirname(row["newpath"])
+        filename = os.path.basename(row["newpath"])
+        absdir = os.path.join(dest, dirname)
+        os.makedirs(absdir, exist_ok=True)
+        fullpath = os.path.join(absdir, filename)
+        #shutil.copy2(row["origfile"], fullpath)
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            f = { executor.submit(shutil.copy2, row["origfile"], fullpath) : fullpath }
+            futures.update(f)
+
+    for f in concurrent.futures.as_completed(futures):
+        try:
+            print(f"Copied:{futures[f]}")
+        except Exception as e:
+            print(e)
+
 def do_organise(src, dest, statuscb):
+    # get meta information from the source path
     dfSrc = GetMetaDataFrame(src, statuscb)
     
     # sort data frame by date
     dfSrc.sort_values(by=["date"], inplace=True)
+
+    # get meta information from the destination path
+    dfDest = GetMetaDataFrame(dest, statuscb)
     
     # get duplicated list of hash values
-    filt = dfSrc.duplicated(subset="hash", keep="first")
+    dfSrc.drop_duplicates(subset=["hash"], keep="first", inplace=True)
+    #filt = dfSrc.duplicated(subset="hash", keep="first")
     # remove duplicates from data
-    dfSrc = dfSrc[~filt]
+    #dfSrc = dfSrc[~filt]
     
     filt = dfSrc.duplicated(subset="newpath", keep=False)
     #print(dfSrc.loc[ filt, "newpath" ].apply(lambda x:x))
@@ -187,5 +211,6 @@ def do_organise(src, dest, statuscb):
 
         prevVal = val
 
-    #pd.set_option('display.max_columns', 5)
-    print(dfSrc)
+    dfMerge = pd.concat([dfSrc, dfDest], keys=["src", "dest"])
+    dfMerge.drop_duplicates(subset=["hash"], keep=False, inplace=True)
+    copy_files(dfMerge.loc["src"], dest)
