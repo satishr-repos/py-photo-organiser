@@ -156,12 +156,13 @@ def GetMetaDataFrame(path, statuscb):
                     data['date'].append(info[1])
                     data['hash'].append(info[2])
                     data['newpath'].append(info[3])
+                    statuscb(f"Processed {info[0]}")
                 except:
                     pass
     
     return pd.DataFrame(data)
 
-def copy_files(df, dest):
+def copy_files(df, dest, statuscb):
     futures = {}
     for idx, row in df.iterrows():
         dirname = os.path.dirname(row["newpath"])
@@ -177,6 +178,7 @@ def copy_files(df, dest):
     for f in concurrent.futures.as_completed(futures):
         try:
             print(f"Copied:{futures[f]}")
+            statuscb(f"Copied {futures[f]}")
         except Exception as e:
             print(e)
 
@@ -213,4 +215,4 @@ def do_organise(src, dest, statuscb):
 
     dfMerge = pd.concat([dfSrc, dfDest], keys=["src", "dest"])
     dfMerge.drop_duplicates(subset=["hash"], keep=False, inplace=True)
-    copy_files(dfMerge.loc["src"], dest)
+    copy_files(dfMerge.loc["src"], dest, statuscb)

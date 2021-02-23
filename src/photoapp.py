@@ -14,8 +14,8 @@ def select_dir(t):
         destpath.set(p)
     return
 
-def status_callback():
-    pass
+def status_callback(text):
+    statusVar.set(text)
 
 def organise_photos():
     print(f"source: {srcpath.get()} destination:{destpath.get()}")
@@ -72,7 +72,7 @@ def main():
     # add status bar
     global statusVar
     statusVar = StringVar()
-    fontStyle = tkFont.Font(family="Helvetica", size=12)
+    fontStyle = tkFont.Font(family="Helvetica", size=10)
     global statusLbl
     statusLbl = Label(root, textvariable=statusVar, bd=1, relief=SUNKEN, font=fontStyle, anchor=W)
     statusLbl.pack(expand="yes", fill="both", padx=10, pady=10)
