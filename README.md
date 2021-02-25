@@ -14,13 +14,13 @@ Python tool to organise photos and videos
 **Source**: directory where photos and vidoes are stored  
 **Destination**: directory where they are to be copied
 ## Requirements
-ffmpeg==1.4
-ffmpeg-python==0.2.0
-ffprobe==0.5
-future==0.18.2
-numpy==1.20.1
-pandas==1.2.2
-Pillow==8.1.0
-python-dateutil==2.8.1
-pytz==2021.1
-six==1.15.0
+ffmpeg==1.4  
+ffmpeg-python==0.2.0  
+ffprobe==0.5  
+future==0.18.2  
+numpy==1.20.1  
+pandas==1.2.2  
+Pillow==8.1.0  
+python-dateutil==2.8.1  
+pytz==2021.1  
+six==1.15.0  
