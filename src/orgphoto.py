@@ -216,3 +216,5 @@ def do_organise(src, dest, statuscb):
     dfMerge = pd.concat([dfSrc, dfDest], keys=["src", "dest"])
     dfMerge.drop_duplicates(subset=["hash"], keep=False, inplace=True)
     copy_files(dfMerge.loc["src"], dest, statuscb)
+    dfMerge.loc["src"].reset_index(drop=True).to_csv(os.path.join(dest, "photos.csv"), mode="a")
+

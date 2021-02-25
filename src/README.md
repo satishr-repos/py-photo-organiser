@@ -1,8 +1,16 @@
 Origanise photos and videos
 ---------------------------
+Description: Python tool to organise photos and videos
+Features:
+	- Identifies duplicate photos/videos and copies only the original file
+	- If the file is already in destination then it is not copied
+	- Copies all meta data information along with the files
+	- Files in the source path is not deleted or modified
+	- Neatly organises files based on year/month
+	- Renames files in destination in the type_YYYYMMDD_HHMMSS format
+	- Creates a photos.csv file with the information on the files copied
+	- Supports almost all video and image formats
 
-input: source path where photos and vidoes
-output: destination where they are to be copied
-
-The source photos/videos are not deleted or modified. The app only identifies photos/videos that are unique
-in the source and they are copied to destination path. The destination is origanised by year/month/photos
+Parameters:
+Source: directory where photos and vidoes are stored
+Destination: directory where they are to be copied
